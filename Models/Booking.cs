@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace UniPool01.Models // <-- Fixed namespace
+namespace UniPool01.Models 
 {
     public class Booking
     {
@@ -13,9 +13,10 @@ namespace UniPool01.Models // <-- Fixed namespace
         public Ride Ride { get; set; }
 
         [ForeignKey("Passenger")]
-        public int PassengerId { get; set; } // <-- Changed from string to int
-        public User Passenger { get; set; } // <-- Changed from IdentityUser to User
+        public int PassengerId { get; set; } 
+        public User Passenger { get; set; } 
 
         public string BookingStatus { get; set; } = "Confirmed";
     }
+
 }

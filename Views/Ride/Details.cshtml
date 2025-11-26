@@ -1,0 +1,16 @@
+﻿@model UniPool01.Models.Ride
+@{
+    ViewData["Title"] = "Ride Details";
+}
+<div class="card mx-auto" style="max-width:720px;">
+    <div class="card-body">
+        <h4>@Model.Departure → @Model.Destination</h4>
+        <p><strong>When:</strong> @Model.DepartureTime.ToString("g")</p>
+        <p><strong>Driver:</strong> @Model.DriverName</p>
+        <p><strong>Seats left:</strong> @Model.AvailableSeats</p>
+        <p><strong>Mode:</strong> @Model.ModeOfTransport</p>
+        <p><strong>Passengers:</strong> @(Model.Passengers?.Count ?? 0)</p>
+
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+</div>

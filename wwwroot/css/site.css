@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+    color: #004D40;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex-grow: 1;
+}
+
+/* NAVBAR */
+.navbar {
+    background: linear-gradient(135deg, #004D40 0%, #00695C 100%) !important;
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* GLASS BUTTONS */
+.btn-glass {
+    background: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: white !important;
+    }
+
+.btn-lang-toggle {
+    border-radius: 12px;
+    padding: 0.5rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-menu-toggle {
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+    border-radius: 16px;
+    padding: 12px;
+    margin-top: 15px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+    .dropdown-item:hover {
+        background-color: #E0F7FA;
+    }
+
+/* HERO SECTION */
+.hero-section {
+    background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+    padding: 6rem 0;
+    text-align: center;
+}
+
+    .hero-section h1 {
+        color: #004D40;
+        font-weight: 700;
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-section .tagline {
+        color: #00695C;
+        font-size: 1.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+/* BUTTONS */
+.btn {
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #00BCD4;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background: #0097A7;
+    }
+
+.btn-outline-light {
+    border: 2px solid #00BCD4;
+    color: #00BCD4;
+    background: white;
+}
+
+    .btn-outline-light:hover {
+        background: #00BCD4;
+        color: white;
+    }
+
+/* SECTIONS */
+.section-title {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #004D40;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.how-it-works {
+    background-color: #F5F5F5 !important;
+}
+
+.why-unipool {
+    background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+}
+
+/* CARDS */
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* FOOTER */
+footer {
+    background: linear-gradient(135deg, #004D40 0%, #00695C 100%);
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+    margin-top: auto;
+}

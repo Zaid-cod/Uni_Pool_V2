@@ -1,0 +1,99 @@
+﻿@model UniPool01.Models.User
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5">
+    <div class="form-card">
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <i class="bi bi-person-plus-fill" style="font-size: 3rem; color: #FF6F61;"></i>
+            </div>
+            <h4>📝 Join UniPool Community</h4>
+            <p class="text-muted">Create your account and start carpooling</p>
+        </div>
+
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-floating mb-3">
+                <input asp-for="FullName"
+                       class="form-control"
+                       id="fullName"
+                       placeholder="Full Name"
+                       required
+                       autocomplete="name">
+                <label for="fullName">
+                    <i class="bi bi-person"></i> Full Name
+                </label>
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Email"
+                       type="email"
+                       class="form-control"
+                       id="registerEmail"
+                       placeholder="name@university.edu"
+                       required
+                       autocomplete="email">
+                <label for="registerEmail">
+                    <i class="bi bi-envelope"></i> University Email
+                </label>
+                <small class="text-muted d-block mt-1">
+                    <i class="bi bi-info-circle"></i> Use your official university email address
+                </small>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control"
+                       id="registerPassword"
+                       placeholder="Password"
+                       required
+                       autocomplete="new-password"
+                       minlength="6">
+                <label for="registerPassword">
+                    <i class="bi bi-key"></i> Password
+                </label>
+                <small class="text-muted d-block mt-1">
+                    <i class="bi bi-shield-lock"></i> Minimum 6 characters
+                </small>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @ViewBag.Error
+                </div>
+            }
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    <i class="bi bi-check-circle"></i> @TempData["Message"]
+                </div>
+            }
+
+            <button type="submit" class="btn btn-success w-100 btn-lg">
+                <i class="bi bi-check-circle"></i> Create Account
+            </button>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center">
+            <p class="text-muted mb-2">Already have an account?</p>
+            <a asp-action="Login" class="btn btn-outline-primary w-100">
+                <i class="bi bi-box-arrow-in-right"></i> Login Instead
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}   

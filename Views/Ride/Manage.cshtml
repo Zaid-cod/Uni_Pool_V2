@@ -1,0 +1,140 @@
+﻿@model UniPool01.Models.Ride
+@{
+    ViewData["Title"] = "Manage Ride";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Manage Your Ride</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Ride Details Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🚗 Ride Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>From:</strong> @Model.Departure</p>
+                    <p><strong>To:</strong> @Model.Destination</p>
+                    <p><strong>Departure Time:</strong> @Model.DepartureTime.ToString("MMMM dd, yyyy - h:mm tt")</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Available Seats:</strong> @Model.AvailableSeats</p>
+                    <p><strong>Mode of Transport:</strong> @Model.ModeOfTransport</p>
+                    <p>
+                        <strong>Status:</strong>
+                        @if (Model.IsCompleted)
+                        {
+                            <span class="badge bg-secondary">Completed</span>
+                        }
+                        else if (Model.AvailableSeats == 0)
+                        {
+                            <span class="badge bg-warning">Full</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Passengers Table -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">👥 Passengers (@Model.Bookings.Count)</h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.Bookings.Any())
+            {
+                <div class="alert alert-info">
+                    <strong>No passengers yet.</strong>
+                    <p class="mb-0">When someone books your ride, they'll appear here.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.Bookings)
+                            {
+                                <tr>
+                                    <td>@booking.Passenger.FullName</td>
+                                    <td>@booking.Passenger.Email</td>
+                                    <td><span class="badge bg-success">@booking.BookingStatus</span></td>
+                                    <td>
+                                        <form asp-action="CancelBooking" method="post" asp-route-id="@booking.Id" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove this passenger?');">
+                                                🗑️ Remove
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 flex-wrap">
+        <a asp-action="MyOffered" class="btn btn-secondary">
+            ← Back to My Rides
+        </a>
+
+        @if (!Model.IsCompleted)
+        {
+            <form asp-action="MarkComplete" method="post" asp-route-id="@Model.Id" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-success" onclick="return confirm('Mark this ride as completed?');">
+                    ✓ Mark as Complete
+                </button>
+            </form>
+        }
+
+        @if (!Model.Bookings.Any())
+        {
+            <form asp-action="DeleteRide" method="post" asp-route-id="@Model.Id" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this ride permanently? This cannot be undone.');">
+                    🗑️ Delete Ride
+                </button>
+            </form>
+        }
+        else
+        {
+            <button type="button" class="btn btn-danger disabled" disabled title="Cannot delete ride with passengers">
+                🗑️ Delete Ride (Has Passengers)
+            </button>
+        }
+    </div>
+</div>

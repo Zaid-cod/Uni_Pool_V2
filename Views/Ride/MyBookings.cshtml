@@ -1,0 +1,205 @@
+﻿@model List<UniPool01.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<h2 class="mb-4">My Bookings</h2>
+
+<!-- Tab Navigation -->
+<ul class="nav nav-tabs mb-3" id="bookingTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab">
+            Upcoming Rides
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">
+            Ride History
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="bookingTabsContent">
+
+    <!-- UPCOMING RIDES TAB -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+        @{
+            var upcomingBookings = Model.Where(b => !b.Ride.IsCompleted).ToList();
+        }
+
+        @if (!upcomingBookings.Any())
+        {
+            <div class="alert alert-info">No upcoming rides.</div>
+        }
+        else
+        {
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Car</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>When</th>
+                        <th>Driver</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in upcomingBookings)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(booking.Ride.Driver?.CarImagePath))
+                                {
+                                    <img src="~/images/cars/@booking.Ride.Driver.CarImagePath"
+                                         alt="Car"
+                                         class="img-thumbnail"
+                                         style="width:80px; height:60px; object-fit:cover;">
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted" style="width:80px; height:60px; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc; border-radius:4px;">
+                                        <small>No Image</small>
+                                    </div>
+                                }
+                            </td>
+                            <td>@booking.Ride.Departure</td>
+                            <td>@booking.Ride.Destination</td>
+                            <td>@booking.Ride.DepartureTime.ToString("MMM dd, yyyy h:mm tt")</td>
+                            <td>@booking.Ride.DriverName</td>
+                            <td><span class="badge bg-success">@booking.BookingStatus</span></td>
+                            <td>
+                                <form asp-controller="Ride" asp-action="CancelBooking" method="post" asp-route-id="@booking.Id" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this booking?');">
+                                        Cancel
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-pane fade" id="history" role="tabpanel">
+        @{
+            var completedBookings = Model.Where(b => b.Ride.IsCompleted).ToList();
+        }
+
+        @if (!completedBookings.Any())
+        {
+            <div class="alert alert-info">No completed rides yet.</div>
+        }
+        else
+        {
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Car</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Completed On</th>
+                        <th>Driver</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in completedBookings)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(booking.Ride.Driver?.CarImagePath))
+                                {
+                                    <img src="~/images/cars/@booking.Ride.Driver.CarImagePath"
+                                         alt="Car"
+                                         class="img-thumbnail"
+                                         style="width:80px; height:60px; object-fit:cover;">
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted" style="width:80px; height:60px; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc; border-radius:4px;">
+                                        <small>No Image</small>
+                                    </div>
+                                }
+                            </td>
+                            <td>@booking.Ride.Departure</td>
+                            <td>@booking.Ride.Destination</td>
+                            <td>@booking.Ride.DepartureTime.ToString("MMM dd, yyyy")</td>
+                            <td>@booking.Ride.DriverName</td>
+                            <td>
+                                @* Check if user has already reviewed this ride *@
+                                @{
+                                    var hasReviewed = ViewBag.ReviewedRides != null && ((List<int>)ViewBag.ReviewedRides).Contains(booking.RideId);
+                                }
+
+                                @if (hasReviewed)
+                                {
+                                    <span class="badge bg-secondary">Already Reviewed</span>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal-@booking.Id">
+                                        ⭐ Rate Driver
+                                    </button>
+
+                                    <!-- Review Modal -->
+                                    <div class="modal fade" id="reviewModal-@booking.Id" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form asp-controller="Review" asp-action="SubmitReview" method="post">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Rate @booking.Ride.DriverName</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="rideId" value="@booking.RideId" />
+
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Rating</label>
+                                                            <select name="rating" class="form-select" required>
+                                                                <option value="">Choose...</option>
+                                                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                                                <option value="4">⭐⭐⭐⭐ Good</option>
+                                                                <option value="3">⭐⭐⭐ Average</option>
+                                                                <option value="2">⭐⭐ Below Average</option>
+                                                                <option value="1">⭐ Poor</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Comment (Optional)</label>
+                                                            <textarea name="comment" class="form-control" rows="3" placeholder="Share your experience..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success mt-3">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+}

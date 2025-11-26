@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    /* This creates the faded background effect */
+    .crystal-bg {
+        position: relative; /* Needed to confine the background to this section */
+        overflow: hidden; /* Keeps the image from spilling out */
+        z-index: 1; /* Ensures text sits on top */
+    }
+
+        .crystal-bg::before {
+            content: "";
+            background-image: url('/images/hero-bg.jpg'); /* Ensure this path matches your folder */
+            background-size: cover; /* Makes it fill the area. Use 'contain' if you want the whole crystal visible */
+            background-position: center; /* Centers the crystal */
+            background-repeat: no-repeat;
+            /* Positioning it behind the text */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* THE FADE EFFECT: Adjust this number (0.1 to 1.0) to make it lighter/darker */
+            opacity: 0.15;
+            z-index: -1; /* Pushes it behind the text */
+        }
+</style>
+
+<section class="hero-section crystal-bg">
+    <div class="container">
+        <h1>🚗 Welcome to UniPool</h1>
+        <p class="tagline">Ride Together, Save Together</p>
+
+        <div class="search-container">
+            <h4>🔍 Find Your Perfect Ride</h4>
+            <form asp-controller="Ride" asp-action="Index" method="get">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" name="from" class="form-control" id="searchFrom" placeholder="From">
+                            <label for="searchFrom">📍 From</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" name="to" class="form-control" id="searchTo" placeholder="To">
+                            <label for="searchTo">📍 To</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <select name="mode" class="form-select" id="searchMode">
+                                <option value="">All Modes</option>
+                                <option value="Car">🚗 Car</option>
+                                <option value="Bike">🏍️ Bike</option>
+                                <option value="Rickshaw">🛺 Rickshaw</option>
+                                <option value="Van">🚐 Van</option>
+                                <option value="Bus">🚌 Bus</option>
+                            </select>
+                            <label for="searchMode">🚦 Mode</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                    Search Rides
+                </button>
+            </form>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a asp-controller="Ride" asp-action="Add" class="btn btn-success btn-lg px-4 hover-scale">
+                ➕ Offer a Ride
+            </a>
+            <a asp-controller="Ride" asp-action="Index" class="btn btn-secondary btn-lg px-4 hover-scale">
+                🔍 Browse All Rides
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5 crystal-bg" style="padding: 40px; border-radius: 15px;">
+    <h2 class="section-title">How UniPool Works</h2>
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="card p-4 hover-scale">
+                <div class="mb-3">
+                    <span style="font-size: 3rem;">📝</span>
+                </div>
+                <h5 class="fw-bold text-gradient">1. Create Account</h5>
+                <p class="text-muted">Register with your university email and verify your identity.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 hover-scale">
+                <div class="mb-3">
+                    <span style="font-size: 3rem;">🚗</span>
+                </div>
+                <h5 class="fw-bold text-gradient">2. Find or Offer</h5>
+                <p class="text-muted">Search for available rides or post your own trip details.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 hover-scale">
+                <div class="mb-3">
+                    <span style="font-size: 3rem;">🎉</span>
+                </div>
+                <h5 class="fw-bold text-gradient">3. Ride & Save</h5>
+                <p class="text-muted">Connect with fellow students and split travel costs.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <h2 class="section-title">Why Choose UniPool?</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card p-4 text-center">
+                <h5 class="fw-bold" style="color: #FF6F61;">💰 Affordable</h5>
+                <p>Share fuel costs with other students and save money every trip.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center">
+                <h5 class="fw-bold" style="color: #00BCD4;">⏰ Convenient</h5>
+                <p>Set your schedule and find rides that fit your university timings.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 text-center">
+                <h5 class="fw-bold" style="color: #4CAF50;">👥 Community</h5>
+                <p>Build new connections and travel safely with fellow students.</p>
+            </div>
+        </div>
+    </div>
+</section>

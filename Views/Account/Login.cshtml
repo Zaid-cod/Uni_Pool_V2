@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="form-card">
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <i class="bi bi-lock-fill" style="font-size: 3rem; color: #00BCD4;"></i>
+            </div>
+            <h4>🔐 Welcome Back to UniPool</h4>
+            <p class="text-muted">Sign in to continue your journey</p>
+        </div>
+
+        <form asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-floating mb-3">
+                <input name="Email"
+                       type="email"
+                       class="form-control"
+                       id="loginEmail"
+                       placeholder="name@example.com"
+                       required
+                       autocomplete="email">
+                <label for="loginEmail">
+                    <i class="bi bi-envelope"></i> Email Address
+                </label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input name="Password"
+                       type="password"
+                       class="form-control"
+                       id="loginPassword"
+                       placeholder="Password"
+                       required
+                       autocomplete="current-password">
+                <label for="loginPassword">
+                    <i class="bi bi-key"></i> Password
+                </label>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> @ViewBag.Error
+                </div>
+            }
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    <i class="bi bi-check-circle"></i> @TempData["Message"]
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </button>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center">
+            <p class="text-muted mb-2">Don't have an account?</p>
+            <a asp-action="Register" class="btn btn-outline-success w-100">
+                <i class="bi bi-person-plus"></i> Create New Account
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+﻿@model UniPool01.Models.User
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2 class="mb-4">Edit Profile</h2>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Profile Info Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Full Name:</strong> @Model.FullName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> @Model.Email</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Role:</strong> <span class="badge bg-info">@Model.Role</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car Image Card -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🚗 Car Image</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.CarImagePath))
+                    {
+                        <div class="mb-3 text-center">
+                            <img src="~/images/cars/@Model.CarImagePath"
+                                 alt="Your Car"
+                                 class="img-fluid rounded shadow-sm"
+                                 style="max-width: 400px; max-height: 300px; object-fit: cover;">
+                        </div>
+
+                        <form asp-action="RemoveCarImage" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove this image?');">
+                                🗑️ Remove Image
+                            </button>
+                        </form>
+
+                        <hr class="my-3">
+                        <p class="text-muted mb-2"><small>Want to change your car image? Upload a new one below:</small></p>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <strong>No car image uploaded yet.</strong>
+                            <p class="mb-0">Upload a photo of your car to build trust with passengers!</p>
+                        </div>
+                    }
+
+                    <form asp-action="UploadCarImage" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Upload New Car Image</label>
+                            <input type="file"
+                                   name="carImage"
+                                   class="form-control"
+                                   accept="image/*"
+                                   required />
+                            <small class="form-text text-muted">
+                                Accepted formats: JPG, PNG, GIF. Max size: 5MB.
+                            </small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            📤 Upload Image
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add this section after the Car Image Card -->
+
+            <div class="card mt-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">⭐ Driver Reviews</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-3">See what passengers think about your rides!</p>
+                    <a asp-controller="Profile" asp-action="ViewReviews" class="btn btn-warning">
+                        <i class="bi bi-star-fill"></i> View My Reviews
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                    ← Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

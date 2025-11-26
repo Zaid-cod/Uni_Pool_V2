@@ -1,0 +1,106 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+@{
+    var userName = Accessor.HttpContext.Session.GetString("UserName");
+    var userRole = Accessor.HttpContext.Session.GetString("UserRole");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UniPool</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png"
+                     alt="UniPool Logo"
+                     style="height: 32px; margin-right: 12px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.7); padding: 2px;">
+                <span style="font-weight: 700; letter-spacing: 0.5px;">UniPool</span>
+            </a>
+
+            <!-- Right Controls -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Language Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-glass btn-lang-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-globe2"></i> EN
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><span class="dropdown-header">SELECT LANGUAGE</span></li>
+                        <li><button class="dropdown-item active" type="button">English</button></li>
+                    </ul>
+                </div>
+
+                <!-- Menu Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-glass btn-menu-toggle" type="button" data-bs-toggle="dropdown">
+                        <span>Menu</span>
+                        <i class="bi bi-grid-fill"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 240px;">
+                        <li><h6 class="dropdown-header">NAVIGATION</h6></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="bi bi-house"></i> Home</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="HowItWorks"><i class="bi bi-question-circle"></i> How It Works</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="About"><i class="bi bi-info-circle"></i> About</a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        @if (!string.IsNullOrEmpty(userName))
+                        {
+                            <li><h6 class="dropdown-header">ACCOUNT (@userName)</h6></li>
+                            <li><a class="dropdown-item" asp-controller="Ride" asp-action="Index"><i class="bi bi-car-front"></i> Find Rides</a></li>
+                            <li><a class="dropdown-item" asp-controller="Profile" asp-action="Edit"><i class="bi bi-person-circle"></i> My Profile</a></li>
+
+                            @if (userRole == "Admin")
+                            {
+                                <li><a class="dropdown-item text-danger fw-bold" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-shield-lock"></i> Admin Panel</a></li>
+                            }
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger fw-bold" asp-controller="Account" asp-action="Logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                        }
+                        else
+                        {
+                            <li><h6 class="dropdown-header">JOIN US</h6></li>
+                            <li><a class="dropdown-item" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Login</a></li>
+                            <li><a class="dropdown-item fw-bold" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus"></i> Create Account</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">&copy; @DateTime.Now.Year - UniPool | Bahria University</p>
+            <p class="mb-0 small">Connecting Students, One Ride at a Time</p>
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

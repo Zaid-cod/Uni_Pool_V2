@@ -1,0 +1,140 @@
+﻿@model UniPool01.Models.Ride
+@{
+    ViewData["Title"] = "Offer a Ride";
+}
+
+<div class="container mt-5">
+    <div class="form-card" style="max-width: 750px;">
+        <div class="text-center mb-4">
+            <h4>🚗 Offer a Ride</h4>
+            <p class="text-muted">Share your journey and help fellow students save money!</p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <form asp-action="Add" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3">
+                <!-- From Location -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Departure"
+                               class="form-control"
+                               id="departure"
+                               placeholder="From"
+                               required />
+                        <label for="departure">
+                            <i class="bi bi-geo-alt"></i> From (e.g., Gulshan)
+                        </label>
+                        <span asp-validation-for="Departure" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- To Location -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Destination"
+                               class="form-control"
+                               id="destination"
+                               placeholder="To"
+                               required />
+                        <label for="destination">
+                            <i class="bi bi-geo-alt-fill"></i> To (e.g., Bahria University)
+                        </label>
+                        <span asp-validation-for="Destination" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Departure Date & Time -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="DepartureTime"
+                               type="datetime-local"
+                               class="form-control"
+                               id="departureTime"
+                               step="60"
+                               required />
+                        <label for="departureTime">
+                            <i class="bi bi-calendar3"></i> Departure Date & Time
+                        </label>
+                        <span asp-validation-for="DepartureTime" class="text-danger"></span>
+                    </div>
+                    <small class="text-muted d-block mt-1">
+                        <i class="bi bi-info-circle"></i> Time format: Hours and minutes only
+                    </small>
+                </div>
+
+                <!-- Available Seats -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <input asp-for="AvailableSeats"
+                               type="number"
+                               class="form-control"
+                               id="seats"
+                               min="1"
+                               max="50"
+                               value="1"
+                               required />
+                        <label for="seats">
+                            <i class="bi bi-person-fill"></i> Seats
+                        </label>
+                        <span asp-validation-for="AvailableSeats" class="text-danger"></span>
+                    </div>
+                    <small class="text-muted d-block mt-1">Max: 50</small>
+                </div>
+
+                <!-- Mode of Transport -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <select asp-for="ModeOfTransport" class="form-select" id="mode">
+                            <option value="Car">🚗 Car</option>
+                            <option value="Bike">🏍️ Bike</option>
+                            <option value="Rickshaw">🛺 Rickshaw</option>
+                            <option value="Van">🚐 Van</option>
+                            <option value="Bus">🚌 Bus</option>
+                        </select>
+                        <label for="mode">
+                            <i class="bi bi-truck"></i> Mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Summary -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    <h6><i class="bi bi-exclamation-triangle"></i> Please fix the following errors:</h6>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewContext.ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success w-100 mt-4 btn-lg">
+                <i class="bi bi-check-circle"></i> Post Ride
+            </button>
+        </form>
+
+        <!-- Back Link -->
+        <div class="text-center mt-3">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Available Rides
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,184 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var users = ViewBag.Users as List<UniPool01.Models.User>;
+    var rides = ViewBag.Rides as List<UniPool01.Models.Ride>;
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">🛡️ Admin Dashboard</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 class="mb-0">@ViewBag.TotalUsers</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Rides</h5>
+                    <h2 class="mb-0">@ViewBag.TotalRides</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Total Bookings</h5>
+                    <h2 class="mb-0">@ViewBag.TotalBookings</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">👥 All Users</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (users != null && users.Any())
+                        {
+                            @foreach (var user in users)
+                            {
+                                <tr>
+                                    <td>@user.Id</td>
+                                    <td>@user.FullName</td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        <span class="badge bg-@(user.Role == "Admin" ? "danger" : "secondary")">
+                                            @user.Role
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (user.Role != "Admin")
+                                        {
+                                            <form asp-action="DeleteUser" method="post" asp-route-id="@user.Id" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user? This action cannot be undone.');">
+                                                    🗑️ Delete
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Protected</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No users found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rides Table -->
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">🚗 All Rides</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Driver</th>
+                            <th>Seats</th>
+                            <th>Bookings</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (rides != null && rides.Any())
+                        {
+                            @foreach (var ride in rides)
+                            {
+                                <tr>
+                                    <td>@ride.Id</td>
+                                    <td>@ride.Departure</td>
+                                    <td>@ride.Destination</td>
+                                    <td>@ride.DepartureTime.ToString("MMM dd, yyyy")</td>
+                                    <td>@ride.DriverName</td>
+                                    <td>@ride.AvailableSeats</td>
+                                    <td>@(ride.Bookings?.Count ?? 0)</td>
+                                    <td>
+                                        @if (ride.IsCompleted)
+                                        {
+                                            <span class="badge bg-secondary">Completed</span>
+                                        }
+                                        else if (ride.AvailableSeats == 0)
+                                        {
+                                            <span class="badge bg-warning">Full</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form asp-action="DeleteRide" method="post" asp-route-id="@ride.Id" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this ride? All associated bookings will also be removed.');">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9" class="text-center text-muted">No rides found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

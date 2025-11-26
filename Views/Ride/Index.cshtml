@@ -1,0 +1,175 @@
+﻿@model List<UniPool01.Models.Ride>
+@{
+    ViewData["Title"] = "Available Rides";
+}
+
+<div class="py-5">
+    <div class="container">
+        <h2 class="section-title">🚗 Available Rides</h2>
+
+        <!-- Quick Actions -->
+        <div class="text-center mb-4">
+            <a class="btn btn-success me-2" asp-action="Add">
+                <i class="bi bi-plus-circle"></i> Offer a Ride
+            </a>
+            <a class="btn btn-secondary me-2" asp-action="MyBookings">
+                <i class="bi bi-bookmark-check"></i> My Bookings
+            </a>
+            <a class="btn btn-secondary" asp-action="MyOffered">
+                <i class="bi bi-car-front"></i> My Rides
+            </a>
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-container mb-5">
+            <h4 class="text-center mb-3">🔍 Search for Rides</h4>
+            <form method="get">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input name="from" value="@Context.Request.Query["from"]" class="form-control" id="from" placeholder="From" />
+                            <label for="from">📍 From</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input name="to" value="@Context.Request.Query["to"]" class="form-control" id="to" placeholder="To" />
+                            <label for="to">📍 To</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <select name="mode" class="form-select" id="mode">
+                                <option value="">All Modes</option>
+                                <option value="Car">🚗 Car</option>
+                                <option value="Bike">🏍️ Bike</option>
+                                <option value="Rickshaw">🛺 Rickshaw</option>
+                                <option value="Van">🚐 Van</option>
+                                <option value="Bus">🚌 Bus</option>
+                            </select>
+                            <label for="mode">🚦 Mode</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary w-100 h-100" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Alerts -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                <strong>✅ Success!</strong> @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong>⚠️ Error!</strong> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Ride Cards -->
+        @if (Model != null && Model.Any())
+        {
+            var userEmail = Context.Session.GetString("UserEmail");
+
+            <div class="row g-4">
+                @foreach (var ride in Model)
+                {
+                    bool isDriver = !string.IsNullOrEmpty(userEmail) && userEmail.Equals(ride.DriverEmail, StringComparison.OrdinalIgnoreCase);
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="ride-card">
+                            <div class="ride-card-header">
+                                <h4>
+                                    @ride.Departure <span class="mx-2">→</span> @ride.Destination
+                                </h4>
+                            </div>
+
+                            <div class="ride-card-body">
+                                <div class="ride-info">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span>@ride.DepartureTime.ToString("MMM dd, yyyy - h:mm tt")</span>
+                                </div>
+
+                                <div class="driver-info">
+                                    @if (!string.IsNullOrEmpty(ride.Driver?.CarImagePath))
+                                    {
+                                        <img src="~/images/cars/@ride.Driver.CarImagePath" alt="Car" class="driver-avatar" />
+                                    }
+                                    else
+                                    {
+                                        <div class="driver-avatar-placeholder">
+                                            @ride.DriverName.Substring(0, 1).ToUpper()
+                                        </div>
+                                    }
+                                    <div class="driver-details">
+                                        <p class="driver-name">
+                                            @ride.DriverName
+                                            @if (ride.Driver != null && ViewData[$"DriverRating_{ride.Driver.Id}"] != null)
+                                            {
+                                                var rating = (double)ViewData[$"DriverRating_{ride.Driver.Id}"];
+                                                var count = (int)ViewData[$"DriverReviewCount_{ride.Driver.Id}"];
+                                                <span class="ms-2">
+                                                    <i class="bi bi-star-fill" style="color: #FFC107;"></i>
+                                                    <small>@rating.ToString("0.0") (@count)</small>
+                                                </span>
+                                            }
+                                        </p>
+                                        <p class="driver-mode">@ride.ModeOfTransport</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ride-card-footer">
+                                @if (ride.AvailableSeats > 0)
+                                {
+                                    <span class="seats-badge">@ride.AvailableSeats Seats</span>
+                                }
+                                else
+                                {
+                                    <span class="seats-badge full">Full</span>
+                                }
+
+                                @if (string.IsNullOrEmpty(userEmail))
+                                {
+                                    <a class="btn btn-primary btn-sm action-btn" asp-controller="Account" asp-action="Login">Login</a>
+                                }
+                                else if (isDriver)
+                                {
+                                    <a asp-action="Manage" asp-route-id="@ride.Id" class="btn btn-secondary btn-sm action-btn">Manage</a>
+                                }
+                                else if (ride.AvailableSeats > 0)
+                                {
+                                    <form asp-action="Join" asp-route-id="@ride.Id" method="post" class="action-btn">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success btn-sm w-100">Book</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm action-btn" disabled>Full</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <h5>🔍 No Rides Found</h5>
+                <p>Be the first to offer a ride!</p>
+                <a asp-action="Add" class="btn btn-success">Offer a Ride</a>
+            </div>
+        }
+    </div>
+</div>

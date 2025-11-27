@@ -3,28 +3,28 @@
 }
 
 <style>
-    /* This creates the faded background effect */
+    
     .crystal-bg {
-        position: relative; /* Needed to confine the background to this section */
-        overflow: hidden; /* Keeps the image from spilling out */
-        z-index: 1; /* Ensures text sits on top */
+        position: relative; 
+        overflow: hidden; 
+        z-index: 1; 
     }
 
         .crystal-bg::before {
             content: "";
-            background-image: url('/images/hero-bg.jpg'); /* Ensure this path matches your folder */
-            background-size: cover; /* Makes it fill the area. Use 'contain' if you want the whole crystal visible */
-            background-position: center; /* Centers the crystal */
+            background-image: url('/images/hero-bg.jpg'); 
+            background-size: cover; 
+            background-position: center;
             background-repeat: no-repeat;
-            /* Positioning it behind the text */
+          
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* THE FADE EFFECT: Adjust this number (0.1 to 1.0) to make it lighter/darker */
+           
             opacity: 0.15;
-            z-index: -1; /* Pushes it behind the text */
+            z-index: -1;
         }
 </style>
 
@@ -135,4 +135,5 @@
             </div>
         </div>
     </div>
+
 </section>

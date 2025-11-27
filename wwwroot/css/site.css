@@ -160,7 +160,7 @@ body {
     transform: scale(1.05);
 }
 
-/* FOOTER */
+/* footer style */
 footer {
     background: linear-gradient(135deg, #004D40 0%, #00695C 100%);
     color: white;
@@ -168,3 +168,4 @@ footer {
     text-align: center;
     margin-top: auto;
 }
+

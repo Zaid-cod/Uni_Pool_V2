@@ -9,13 +9,13 @@ using UniPool01.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 
-// Add EF Core DbContext
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 
-// Add services
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -27,7 +27,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Pipeline
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,7 +39,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // must come before UseAuthorization if you use Authorization
+app.UseSession(); 
 
 app.UseAuthorization();
 

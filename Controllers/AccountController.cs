@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using UniPool01.Models;
-using System.Linq;
 using UniPool01.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+
+using System.Linq;
+
+
+
 
 namespace UniPool01.Controllers
 {
@@ -56,7 +60,13 @@ namespace UniPool01.Controllers
             TempData["Message"] = "Registration successful. You may log in now.";
             return RedirectToAction("Login");
         }
-
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            TempData["Message"] = "You have been logged out.";
+            return RedirectToAction("Index", "Home");
+        }
         // GET: /Account/Login
         [HttpGet]
         public IActionResult Login()
@@ -94,12 +104,7 @@ namespace UniPool01.Controllers
         }
 
         // GET: /Account/Logout
-        [HttpGet]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            TempData["Message"] = "You have been logged out.";
-            return RedirectToAction("Index", "Home");
-        }
+
     }
+
 }

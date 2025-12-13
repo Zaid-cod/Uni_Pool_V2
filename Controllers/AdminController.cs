@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using UniPool01.Data;
 using UniPool01.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using System.Threading.Tasks;
 
 namespace UniPool01.Controllers
@@ -31,7 +32,25 @@ namespace UniPool01.Controllers
 
             return View();
         }
+     [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteRide(int id)
+        {
+            var ride = await _db.Rides.FindAsync(id);
 
+            if (ride != null)
+            {
+                _db.Rides.Remove(ride);
+                await _db.SaveChangesAsync();
+                TempData["Message"] = "Ride deleted successfully.";
+            }
+            else
+            {
+                TempData["Error"] = "Ride not found.";
+            }
+
+            return RedirectToAction("Dashboard");
+        }
         // POST: /Admin/DeleteUser
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -61,24 +80,7 @@ namespace UniPool01.Controllers
         }
 
         // POST: /Admin/DeleteRide
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteRide(int id)
-        {
-            var ride = await _db.Rides.FindAsync(id);
-
-            if (ride != null)
-            {
-                _db.Rides.Remove(ride);
-                await _db.SaveChangesAsync();
-                TempData["Message"] = "Ride deleted successfully.";
-            }
-            else
-            {
-                TempData["Error"] = "Ride not found.";
-            }
-
-            return RedirectToAction("Dashboard");
-        }
+   
     }
+
 }

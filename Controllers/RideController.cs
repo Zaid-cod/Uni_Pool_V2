@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using UniPool01.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using UniPool01.Models;
 using System.Linq;
 using System;
-using UniPool01.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -77,20 +77,7 @@ namespace UniPool01.Controllers
             return View(rides);
         }
 
-        // GET: /Ride/Add
-        [HttpGet]
-        public IActionResult Add()
-        {
-            if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
 
-            var model = new Ride
-            {
-                DepartureTime = DateTime.Now.AddHours(1),
-                ModeOfTransport = "Car",
-                AvailableSeats = 1
-            };
-            return View(model);
-        }
 
         // POST: /Ride/Add - ENHANCED WITH VALIDATION
         [HttpPost]
@@ -134,6 +121,22 @@ namespace UniPool01.Controllers
             TempData["Message"] = "Ride posted successfully! 🎉";
             return RedirectToAction("Index");
         }
+
+        // GET: /Ride/Add
+        [HttpGet]
+        public IActionResult Add()
+        {
+            if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
+
+            var model = new Ride
+            {
+                DepartureTime = DateTime.Now.AddHours(1),
+                ModeOfTransport = "Car",
+                AvailableSeats = 1
+            };
+            return View(model);
+        }
+
 
         // POST: /Ride/Join/5
         [HttpPost]
@@ -356,4 +359,5 @@ namespace UniPool01.Controllers
             return RedirectToAction("MyOffered");
         }
     }
+
 }

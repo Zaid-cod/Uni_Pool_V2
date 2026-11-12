@@ -21,14 +21,14 @@ namespace UniPool01.Controllers
             _db = db;
         }
 
-        // GET: /Account/Register
+        
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: /Account/Register
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(User model)
@@ -39,14 +39,14 @@ namespace UniPool01.Controllers
                 return View(model);
             }
 
-            // Check if user already exists
+          
             if (await _db.Users.AnyAsync(u => u.Email.ToLower() == model.Email.ToLower()))
             {
                 ViewBag.Error = "A user with that email already exists.";
                 return View(model);
             }
 
-            // Add new user to database
+         
             _db.Users.Add(new User
             {
                 FullName = model.FullName ?? "",
@@ -67,14 +67,14 @@ namespace UniPool01.Controllers
             TempData["Message"] = "You have been logged out.";
             return RedirectToAction("Index", "Home");
         }
-        // GET: /Account/Login
+        
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: /Account/Login
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string Email, string Password)
@@ -85,7 +85,7 @@ namespace UniPool01.Controllers
                 return View();
             }
 
-            // Validate credentials
+            
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == Email.ToLower() && u.Password == Password);
 
             if (user == null)
@@ -103,7 +103,7 @@ namespace UniPool01.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: /Account/Logout
+      
 
     }
 

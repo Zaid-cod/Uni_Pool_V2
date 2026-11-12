@@ -19,12 +19,12 @@ namespace UniPool01.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Review relationships to prevent cascade delete conflicts
+            
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Reviewer)
                 .WithMany()
                 .HasForeignKey(r => r.ReviewerId)
-                .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.NoAction); 
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Driver)

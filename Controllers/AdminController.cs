@@ -17,7 +17,7 @@ namespace UniPool01.Controllers
             _db = db;
         }
 
-        // GET: /Admin/Dashboard
+       
         public async Task<IActionResult> Dashboard()
         {
             ViewBag.Users = await _db.Users.OrderBy(u => u.Id).ToListAsync();
@@ -51,7 +51,7 @@ namespace UniPool01.Controllers
 
             return RedirectToAction("Dashboard");
         }
-        // POST: /Admin/DeleteUser
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(int id)
@@ -60,7 +60,7 @@ namespace UniPool01.Controllers
 
             if (user != null)
             {
-                // Prevent deleting admin account
+                
                 if (user.Role == "Admin")
                 {
                     TempData["Error"] = "Cannot delete admin account.";
@@ -79,7 +79,7 @@ namespace UniPool01.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // POST: /Admin/DeleteRide
+       
    
     }
 
